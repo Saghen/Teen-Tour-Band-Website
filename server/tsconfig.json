@@ -1,0 +1,32 @@
+{
+  "version": "3.9.5",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "lib": ["ES5", "ES6"] /* Exclude DOM */,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@lib/*": ["./lib/*"],
+      "@logger": ["./lib/logger.js"],
+      "@middleware/*": ["./middleware/*"],
+      "@routes/*": ["./routes/*"],
+      "@routes": ["./routes"],
+      "@services/*": ["./services/*"],
+      "@helpers/*": ["./helpers/*"],
+      "@models/*": ["./models/*"],
+      "@store/*": ["./store/*"],
+      "@cache/*": ["./cache/*"],
+      "@config": ["./config/config.js"],
+      "@constants": ["../../shared/constants.js"],
+      "@shared/*": ["../../shared/*"],
+      "@db/*": ["./db/*"],
+      "@root/*": ["./*"]
+    }
+  },
+  "include": ["./src/**/*"]
+}

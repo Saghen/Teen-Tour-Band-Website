@@ -1,0 +1,25 @@
+{
+  "env": "production",
+  "api": {
+    "domain": "cmdr-ops.com"
+  },
+  "client": {
+    "domain": "https://stage.review.cmdr-ops.com"
+  },
+  "mongo": {
+    "name": "review-portal-staging",
+    "auth": {
+      "enabled": true,
+      "username": "nioincali",
+      "password": "qs766VbDqAWJ5kXG"
+    }
+  },
+  "sql": {
+    "host": "74.207.232.181",
+    "name": "cmdr",
+    "auth": {
+      "username": "review_portal",
+      "password": "cy5tk!FkwzjH5QJN"
+    }
+  }
+}
