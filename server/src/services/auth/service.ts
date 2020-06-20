@@ -10,7 +10,7 @@ import User from '@models/User'
 const authConfig = config.get('auth')
 
 export default {
-  async login({ username, password }) {
+  async login({ username, password }): Promise<string> {
     if (!authConfig.enabled) return objectToToken({ admin: true })
     BadRequest.assert(username && password, 'A username and password must be provided')
     // TODO: Check types
@@ -37,5 +37,5 @@ export default {
       officeIds: user.computedOfficeIds,
     })
   },
-  async signup({ firstName, lastName, username, password, inviteCode }) {},
+  /*  async signup({ firstName, lastName, username, password, inviteCode }) {}, */
 }

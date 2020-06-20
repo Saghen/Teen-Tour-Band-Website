@@ -4,7 +4,7 @@ import path from 'path'
 
 import getRootDir from './get-root-dir.js'
 
-async function generateKey() {
+async function generateKey(): Promise<void> {
   const key = (await paseto.V2.generateKey('local')).export()
 
   const config = { auth: { secret: { type: 'Buffer', data: Array.from(key) } } }

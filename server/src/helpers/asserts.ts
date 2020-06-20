@@ -1,14 +1,13 @@
 import { BadRequest, NotFound, Conflict } from 'fejl'
-import a from 'indefinite'
+
+const assertRequiredGenerator = (property, type) =>
+  BadRequest.makeAssert(`${property} is required${type && ` and must be of type ${type}`}`)
 
 const assertObjectId = BadRequest.makeAssert('A valid ObjectId must be provided')
 const assertObjectIdGenerator = (property) => assertRequiredGenerator(property, 'ObjectId in the form of a string')
 
 const assertPermissionLevel = BadRequest.makeAssert('The permission level must be one of the enum values')
 const assertStatus = BadRequest.makeAssert('The status must be one of the enum values')
-
-const assertRequiredGenerator = (property, type) =>
-  BadRequest.makeAssert(`${property} is required${type && ` and must be of type ${type}`}`)
 
 const assertMustBeOfType = (property, type) => BadRequest.makeAssert(`${property} must be of type ${type}`)
 

@@ -12,9 +12,11 @@ import getRootDir from '@helpers/get-root-dir'
 const { combine, colorize, label, simple, timestamp } = format
 const loggerConfig = config.get('logger')
 
-function addToBeginning(label, chalkFunc) {
+type ChalkFuncType = (s: string) => any
+
+function addToBeginning(logLabel, chalkFunc: ChalkFuncType) {
   return format((info) => {
-    info.level = `${chalkFunc(label)}: ${info.level}`
+    info.level = `${chalkFunc(logLabel)}: ${info.level}`
     return info
   })()
 }
@@ -26,13 +28,16 @@ function json(replacer, space) {
   })()
 }
 
-function createConsoleTransport(label?: string, chalkFunc?: Function): transports.ConsoleTransportInstance | void {
+function createConsoleTransport(
+  logLabel?: string,
+  chalkFunc?: ChalkFuncType
+): transports.ConsoleTransportInstance | void {
   if (!loggerConfig.console.enabled) return
   const formatFuncs = [colorize(), simple()]
-  if (label) {
+  if (logLabel) {
     if (!chalkFunc) throw new Error('Must provide chalk function when using a label')
 
-    formatFuncs.splice(1, 0, addToBeginning(label, chalkFunc))
+    formatFuncs.splice(1, 0, addToBeginning(logLabel, chalkFunc))
   }
   return new transports.Console({
     level: loggerConfig.console.level,
@@ -49,7 +54,9 @@ function createFileTransport(labelText?: string): transports.FileTransportInstan
 
   try {
     fs.mkdirSync(logDir)
-  } catch (err) {}
+  } catch (err) {
+    return
+  }
 
   const formatFuncs = [json(undefined, config.get('env') !== 'production' ? 2 : 0), timestamp()]
   if (labelText) formatFuncs.unshift(label({ label: labelText }))
@@ -88,7 +95,7 @@ const logger: LoggerWithExtras = Object.defineProperties(
 
 export default logger
 
-export const waitForLogger = async (logger) => {
+export const waitForLogger = async (logger): Promise<unknown> => {
   const loggerDone = new Promise((resolve) => logger.on('finish', resolve))
   logger.close()
   return loggerDone
