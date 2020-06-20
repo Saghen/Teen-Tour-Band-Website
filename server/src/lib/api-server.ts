@@ -59,10 +59,10 @@ async function createAPIServer() {
 }
 
 function enableDestroy(server) {
-  var connections = {}
+  const connections = {}
 
   server.on('connection', function (conn) {
-    var key = conn.remoteAddress + ':' + conn.remotePort
+    const key = `${conn.remoteAddress}:${conn.remotePort}`
     connections[key] = conn
     conn.on('close', function () {
       delete connections[key]
@@ -71,7 +71,7 @@ function enableDestroy(server) {
 
   server.destroy = function (cb) {
     server.close(cb)
-    for (var key in connections) connections[key].destroy()
+    for (const key in connections) connections[key].destroy()
   }
 }
 

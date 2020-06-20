@@ -55,8 +55,8 @@ const UserSchema = new mongoose.Schema(
       virtuals: true,
     },
     toJSON: {
-      virtuals: true
-    }
+      virtuals: true,
+    },
   }
 )
 
@@ -64,7 +64,7 @@ const UserSchema = new mongoose.Schema(
  * Password hashing and comparing
  */
 UserSchema.pre('save', async function () {
-  let user = this
+  const user = this
   if (!user.isModified('password') || user.password === undefined) return
 
   const salt = await bcrypt.genSalt(10)
@@ -77,7 +77,7 @@ UserSchema.methods.comparePassword = async function (password) {
 }
 
 UserSchema.methods.toJSON = function () {
-  var obj = this.toObject()
+  const obj = this.toObject()
   delete obj.password
   return obj
 }
@@ -90,9 +90,7 @@ UserSchema.virtual('permissionLevel')
     return PERMISSIONS[this.permisionEnum]
   })
   .set(function setPermissionLevel(permissionLevel) {
-    const permissionEnum = Object.entries(PERMISSIONS).find(
-      (permission) => permission[1] === permissionLevel
-    )
+    const permissionEnum = Object.entries(PERMISSIONS).find((permission) => permission[1] === permissionLevel)
     if (!permissionEnum) throw new Error('The permission enum was not found')
     this.set({ permissionEnum: permissionEnum[0] })
   })

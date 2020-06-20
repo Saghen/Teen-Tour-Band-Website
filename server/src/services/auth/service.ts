@@ -4,9 +4,10 @@ import { objectToToken, comparePassword } from '@helpers/auth'
 
 import { PERMISSIONS } from '@constants'
 import config from '@config'
-const authConfig = config.get('auth')
 
 import User from '@models/User'
+
+const authConfig = config.get('auth')
 
 export default {
   async login({ username, password }) {
@@ -36,7 +37,5 @@ export default {
       officeIds: user.computedOfficeIds,
     })
   },
-  async signup({ firstName, lastName, username, password, inviteCode }) {
-
-  }
+  async signup({ firstName, lastName, username, password, inviteCode }) {},
 }

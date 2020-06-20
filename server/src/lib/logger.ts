@@ -21,7 +21,7 @@ function addToBeginning(label, chalkFunc) {
 
 function json(replacer, space) {
   return format((info) => {
-    info[tripleBeam.MESSAGE] = JSON.stringify(info, replacer, space) + ','
+    info[tripleBeam.MESSAGE] = `${JSON.stringify(info, replacer, space)},`
     return info
   })()
 }

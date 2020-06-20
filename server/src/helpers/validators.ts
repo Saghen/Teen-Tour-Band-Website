@@ -9,9 +9,7 @@ function isPermissionEnum(permissionEnum) {
 }
 
 function isPermissionLevel(permissionLevel) {
-  return Object.entries(PERMISSIONS).some(
-    (permission) => permission[1] === permissionLevel
-  )
+  return Object.entries(PERMISSIONS).some((permission) => permission[1] === permissionLevel)
 }
 
 function isStatus(status) {

@@ -3,6 +3,8 @@ import path from 'path'
 import getRootDir from '@helpers/get-root-dir'
 import fs from 'fs'
 
+import activeConfigs from './activeConfigs.json'
+
 const config = convict({
   env: {
     doc: 'The application environment.',
@@ -185,12 +187,10 @@ const config = convict({
     externalSecret: {
       doc: 'Used for converting a PMHID to a token for access to the generated reports',
       format: String,
-      default: 'NioIsACaliLad'
-    }
+      default: 'NioIsACaliLad',
+    },
   },
 })
-
-import activeConfigs from './activeConfigs.json'
 
 for (const configName of activeConfigs) {
   config.loadFile(path.join(getRootDir(), `src/config/configs/${configName}.json`))

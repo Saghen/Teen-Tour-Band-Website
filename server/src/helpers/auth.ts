@@ -13,13 +13,11 @@ import { assertNotLoggedIn, assertNotAuthorized, assertMustBeAdmin } from '@serv
 const secretKey = createSecretKey(Buffer.from(config.get('auth.secret')))
 
 interface AuthMiddlewareOptions {
-  passthrough: Boolean
-  permissionLevel: Number
+  passthrough: boolean
+  permissionLevel: number
 }
 
-function authMiddleware(
-  options: AuthMiddlewareOptions = { passthrough: false, permissionLevel: PERMISSIONS.DEFAULT }
-) {
+function authMiddleware(options: AuthMiddlewareOptions = { passthrough: false, permissionLevel: PERMISSIONS.DEFAULT }) {
   return async (ctx: Context, next: Next) => {
     const { passthrough = false, permissionLevel = PERMISSIONS.DEFAULT } = options
     const token = ctx.cookies.get(config.get('auth').cookie)
@@ -28,7 +26,7 @@ function authMiddleware(
     if (token || !passthrough) {
       try {
         ctx.user = await V2.decrypt(token, secretKey)
-      } catch(err) {
+      } catch (err) {
         return ctx.forbidden({ message: 'The token is invalid', invalidToken: true })
       }
     }

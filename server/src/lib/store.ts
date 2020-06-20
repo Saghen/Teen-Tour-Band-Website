@@ -2,7 +2,9 @@ import v8 from 'v8'
 
 class Store {
   store: { [key: string]: any }
+
   initialValue: { [key: string]: any }
+
   constructor(initialValue) {
     this.store = initialValue
     this.initialValue = v8.deserialize(v8.serialize(initialValue))

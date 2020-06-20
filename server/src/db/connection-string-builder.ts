@@ -35,9 +35,7 @@ function ConnectionString(params) {
 ConnectionString.prototype.toURI = function () {
   //  Build the full connection string.
   const protocolPart = this.protocol || 'mongodb://'
-  const authPart = this.username
-    ? `${encodeURIComponent(this.username)}:${encodeURIComponent(this.password)}@`
-    : ''
+  const authPart = this.username ? `${encodeURIComponent(this.username)}:${encodeURIComponent(this.password)}@` : ''
   const hostsPart = this.hosts
     .map((h) => {
       return h.port ? `${h.host}:${h.port}` : h.host
@@ -47,9 +45,7 @@ ConnectionString.prototype.toURI = function () {
 
   //  Options are only needed if we actually have values in the options object.
   const optionsPart =
-    this.options && Object.getOwnPropertyNames(this.options).length > 0
-      ? `?${querystring.stringify(this.options)}`
-      : ''
+    this.options && Object.getOwnPropertyNames(this.options).length > 0 ? `?${querystring.stringify(this.options)}` : ''
 
   return [protocolPart, authPart, hostsPart, databasePart, optionsPart].join('')
 }
@@ -79,9 +75,7 @@ ConnectionString.prototype.toString = function () {
 
   //  Options are only needed if we actually have values in the options object.
   const optionsPart =
-    this.options && Object.getOwnPropertyNames(this.options).length > 0
-      ? `?${querystring.stringify(this.options)}`
-      : ''
+    this.options && Object.getOwnPropertyNames(this.options).length > 0 ? `?${querystring.stringify(this.options)}` : ''
 
   return [protocolPart, authPart, hostsPart, databasePart, optionsPart].join('')
 }

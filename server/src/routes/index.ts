@@ -1,7 +1,8 @@
 import KoaRouter from 'koa-router'
-const router = new KoaRouter()
 
 import authRoutes from './auth/auth-api'
+
+const router = new KoaRouter()
 
 const apiRouters = [authRoutes]
 

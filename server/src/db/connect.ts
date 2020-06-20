@@ -11,12 +11,12 @@ mongoose.set('runValidators', true) // run validators on update
 let db
 
 export default async function connectToMongo() {
-  let mongoConfig = config.get('mongo')
+  const mongoConfig = config.get('mongo')
 
   if (mongoose.connection.readyState === 1) {
     return mongoose
   }
-  logger.db.info('Connecting to Mongo ' + mongoConfig.host + '...')
+  logger.db.info(`Connecting to Mongo ${mongoConfig.host}...`)
 
   try {
     if (!mongoConfig.auth.enabled && config.get('env') === 'production')

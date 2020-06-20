@@ -20,7 +20,7 @@ const accessLogStream = fs.createWriteStream(
 const chalkColors = [chalk.red, chalk.green, chalk.yellow, chalk.blue, chalk.magenta, chalk.cyan]
 
 interface ErrorInfo {
-  message?: string,
+  message?: string
   stack?: string
 }
 
@@ -45,7 +45,7 @@ export default function createRequestLogger(label, labelColorFunc) {
       `${labelColorFunc(label)}: ${hashColorFunc(hash)} --> ${chalk.underline(ctx.method)} ${ctx.request.url}`
     )
 
-    let errorInfo: ErrorInfo = {}
+    const errorInfo: ErrorInfo = {}
     try {
       await next()
     } catch (err) {
@@ -100,7 +100,7 @@ export default function createRequestLogger(label, labelColorFunc) {
 
 function writeObjectToFile(obj) {
   accessLogStream.write(
-    JSON.stringify(obj, undefined, config.get('env') !== 'production' ? 2 : 0) + ',\n',
-    (err) => err && (logger.error(`Error while writing logs to file`) || logger.error(err.message))
+    `${JSON.stringify(obj, undefined, config.get('env') !== 'production' ? 2 : 0)},\n`,
+    (err) => err && (logger.error('Error while writing logs to file') || logger.error(err.message))
   )
 }
