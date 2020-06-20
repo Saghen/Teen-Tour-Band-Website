@@ -1,6 +1,15 @@
 {
-  "extends": ["prettier", "plugin:import/errors"],
-  "plugins": ["prettier", "import"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "extends": [
+    "airbnb-typescript",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "plugins": ["prettier", "@typescript-eslint"],
   "env": {
     "node": true,
     "es2020": true
@@ -8,9 +17,10 @@
   "rules": {
     "indent": ["error", 2],
     "space-before-function-paren": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "linebreak-style": "off",
     "global-require": "off",
-    "semi": [2, "never"],
+    "@typescript-eslint/semi": "off",
     "arrow-body-style": "off",
     "no-multiple-empty-lines": ["warn", { "max": 1 }],
     "no-unused-expressions": [
@@ -21,9 +31,11 @@
     ],
     "no-underscore-dangle": "off",
     "import/no-unresolved": "off",
-    "import/no-commonjs": ["error", { "allowRequire": false }]
-  },
-  "parserOptions": {
-    "sourceType": "module"
+    "import/no-mutable-exports": "off",
+    "import/prefer-default-export": "off",
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "consistent-return": "off"
   }
 }

@@ -7,6 +7,7 @@
     "build": "tsc",
     "dev": "concurrently --raw \"tsc -w\" \"nodemon --delay 0.3 --unhandled-rejections=strict dist/server.js\"",
     "generateKey": "ts-node src/helpers/generateKey.ts",
+    "lint": "eslint --fix --ext .ts src && prettier --write \"src/**/*.ts\"",
     "config": "ts-node src/config/setConfigs.ts"
   },
   "author": "",
@@ -45,10 +46,17 @@
   "devDependencies": {
     "@types/koa": "^2.11.3",
     "@types/node": "^14.0.13",
+    "@typescript-eslint/eslint-plugin": "^3.3.0",
+    "@typescript-eslint/parser": "^3.3.0",
     "concurrently": "^5.2.0",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-airbnb-typescript": "^8.0.2",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.20.0",
     "nodemon": "^2.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
