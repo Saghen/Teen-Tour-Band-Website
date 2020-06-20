@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import readline from 'readline-sync'
 import fs from 'fs'
 import path from 'path'
@@ -13,6 +14,24 @@ let configs = fs.readdirSync(configsFolder)
 
 // Trim extension
 configs = configs.map((val) => val.split('.').slice(0, -1).join('.'))
+
+// Util Funcs
+function storeConfigs(selectedConfigs) {
+  if (!Array.isArray(selectedConfigs)) throw new Error('Selected array must be an array')
+
+  fs.writeFileSync(path.join(rootDir, 'src/config/activeConfigs.json'), JSON.stringify(selectedConfigs))
+  console.log(chalk.bold.blue('Successfully stored new configuration'))
+  console.log(selectedConfigs)
+}
+
+function exitIfConfigsDontExist(selectedConfigs) {
+  for (const config of selectedConfigs) {
+    if (!configs.includes(config)) {
+      console.error(`"${config}" was not found in the configs folder`)
+      process.exit(1)
+    }
+  }
+}
 
 // Remove node and file location from arguments
 const args = process.argv.slice(2)
@@ -45,21 +64,3 @@ const selectedConfigs = ans.split(',').map((val) => val.trim())
 if (selectedConfigs.length === 1 && selectedConfigs[0] === '') selectedConfigs.shift()
 exitIfConfigsDontExist(selectedConfigs)
 storeConfigs(selectedConfigs)
-
-// Util Funcs
-function storeConfigs(selectedConfigs) {
-  if (!Array.isArray(selectedConfigs)) throw new Error('Selected array must be an array')
-
-  fs.writeFileSync(path.join(rootDir, 'src/config/activeConfigs.json'), JSON.stringify(selectedConfigs))
-  console.log(chalk.bold.blue('Successfully stored new configuration'))
-  console.log(selectedConfigs)
-}
-
-function exitIfConfigsDontExist(selectedConfigs) {
-  for (const config of selectedConfigs) {
-    if (!configs.includes(config)) {
-      console.error(`"${config}" was not found in the configs folder`)
-      process.exit(1)
-    }
-  }
-}
