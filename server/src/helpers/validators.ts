@@ -4,25 +4,25 @@ import { assertMustBeOfType, assertObjectIdGenerator, assertArrayMustContainItem
 
 const isObjectId = mongoose.Types.ObjectId.isValid
 
-function isPermissionEnum(permissionEnum: string): boolean {
+function isPermissionEnum(permissionEnum) {
   return Object.keys(PERMISSIONS).includes(permissionEnum)
 }
 
-function isPermissionLevel(permissionLevel: string): boolean {
+function isPermissionLevel(permissionLevel) {
   return Object.entries(PERMISSIONS).some((permission) => permission[1] === permissionLevel)
 }
 
-function isStatus(status: string | number): boolean {
+function isStatus(status) {
   if (typeof status === 'string') return Object.keys(STATUS).includes(status)
   if (typeof status === 'number') return Object.values(STATUS).includes(status)
   return false
 }
 
-function isAlertLevel(alertLevel: string): boolean {
+function isAlertLevel(alertLevel) {
   return Object.keys(ALERTLEVEL).includes(alertLevel)
 }
 
-function validateArrayOfObjectIds(property: any, data: any): void {
+function validateArrayOfObjectIds(property, data) {
   assertMustBeOfType(property, 'array')(Array.isArray(data))
   assertArrayMustContainItem(property)(data.length > 0)
   assertObjectIdGenerator(`${property} child items'`)(data.every(isObjectId))

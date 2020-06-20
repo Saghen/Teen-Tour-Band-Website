@@ -18,7 +18,7 @@ interface AuthMiddlewareOptions {
 }
 
 function authMiddleware(options: AuthMiddlewareOptions = { passthrough: false, permissionLevel: PERMISSIONS.DEFAULT }) {
-  return async (ctx: Context, next: Next): Promise<any> => {
+  return async (ctx: Context, next: Next) => {
     const { passthrough = false, permissionLevel = PERMISSIONS.DEFAULT } = options
     const token = ctx.cookies.get(config.get('auth').cookie)
     assertNotLoggedIn(token || passthrough)
@@ -41,15 +41,15 @@ function authMiddleware(options: AuthMiddlewareOptions = { passthrough: false, p
   }
 }
 
-function objectToToken(obj): Promise<string> {
+function objectToToken(obj) {
   return V2.encrypt(obj, secretKey)
 }
 
-function comparePassword(password: string, encryptedPassword: string): Promise<boolean> {
+function comparePassword(password, encryptedPassword) {
   return bcrypt.compare(password, encryptedPassword)
 }
 
-function isAuthorized(permissionLevel, { user }): boolean {
+function isAuthorized(permissionLevel, { user }) {
   return permissionLevel >= user.permissionLevel
 }
 

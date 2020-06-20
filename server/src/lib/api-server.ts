@@ -15,33 +15,11 @@ import { db } from '@db/connect'
 
 import router from '@routes'
 
-type DestroyFunctionType = () => any;
-
 interface ServerWithDestroy extends http.Server {
-  destroy?: DestroyFunctionType
+  destroy?: Function
 }
 
-function enableDestroy(server: any): void {
-  const connections = {}
-
-  server.on('connection', (conn) => {
-    const key = `${conn.remoteAddress}:${conn.remotePort}`
-    connections[key] = conn
-    conn.on('close', () => {
-      delete connections[key]
-    })
-  })
-
-  server.destroy = (cb) => {
-    server.close(cb)
-    for (const key in connections) {
-      if (connections[key])
-        connections[key].destroy()
-    }
-  }
-}
-
-async function createAPIServer(): Promise<ServerWithDestroy> {
+async function createAPIServer() {
   logger.api.info('Creating server...')
 
   const app = new Koa()
@@ -78,6 +56,23 @@ async function createAPIServer(): Promise<ServerWithDestroy> {
 
   logger.api.info('Server created, ready to listen')
   return server
+}
+
+function enableDestroy(server) {
+  const connections = {}
+
+  server.on('connection', function (conn) {
+    const key = `${conn.remoteAddress}:${conn.remotePort}`
+    connections[key] = conn
+    conn.on('close', function () {
+      delete connections[key]
+    })
+  })
+
+  server.destroy = function (cb) {
+    server.close(cb)
+    for (const key in connections) connections[key].destroy()
+  }
 }
 
 export { createAPIServer, enableDestroy }

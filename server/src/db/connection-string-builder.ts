@@ -1,6 +1,6 @@
 import querystring from 'querystring'
 
-function ConnectionString(params): void {
+function ConnectionString(params) {
   if (!params) {
     throw new Error("Connection string 'params' are required")
   }

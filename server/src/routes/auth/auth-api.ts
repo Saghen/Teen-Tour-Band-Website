@@ -31,9 +31,7 @@ router.post('/login', async (ctx) => {
   ctx.ok({ message: 'Successfully logged in', token })
 })
 
-router.post('/signup', async () => {
-
-})
+router.post('/signup', async (ctx) => {})
 
 router.get('/get', authMiddleware(), (ctx) => ctx.ok(ctx.user))
 

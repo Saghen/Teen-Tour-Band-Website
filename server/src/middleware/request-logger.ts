@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-import Koa from 'koa';
-
 import config from '@config'
 
 import path from 'path'
@@ -27,19 +24,8 @@ interface ErrorInfo {
   stack?: string
 }
 
-function writeObjectToFile(obj) {
-  accessLogStream.write(
-    `${JSON.stringify(obj, undefined, config.get('env') !== 'production' ? 2 : 0)},\n`,
-    (err) => err && (logger.error('Error while writing logs to file') || logger.error(err.message))
-  )
-}
-
-// TODO: Move these to types.ts
-type LabelColorFuncType = (s: string) => any;
-type NextType = () => any;
-
-export default function createRequestLogger(label: string, labelColorFunc: LabelColorFuncType) {
-  return async (ctx: Koa.Context, next: NextType): Promise<void> => {
+export default function createRequestLogger(label, labelColorFunc) {
+  return async (ctx, next) => {
     const hash = Math.round(Math.random() * Number.MAX_SAFE_INTEGER)
       .toString(16)
       .slice(0, 5)
@@ -65,9 +51,8 @@ export default function createRequestLogger(label: string, labelColorFunc: Label
     } catch (err) {
       // TODO: Use validation error instance of
       if (Array.isArray(err.failures)) {
-        // NOTE: Need to add semicolon here to denote that [ctx.body] is not apart of the previous statement
-        ctx.status = 400;
-        [ctx.body] = err.failures
+        ctx.status = 400
+        ctx.body = err.failures[0]
         errorInfo.message = ctx.body.message
       } else {
         ctx.status = err.statusCode || 500
@@ -113,3 +98,9 @@ export default function createRequestLogger(label: string, labelColorFunc: Label
   }
 }
 
+function writeObjectToFile(obj) {
+  accessLogStream.write(
+    `${JSON.stringify(obj, undefined, config.get('env') !== 'production' ? 2 : 0)},\n`,
+    (err) => err && (logger.error('Error while writing logs to file') || logger.error(err.message))
+  )
+}

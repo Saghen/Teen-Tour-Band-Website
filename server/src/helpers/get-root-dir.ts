@@ -1,6 +1,6 @@
 import path from 'path'
 
-function getRootDir(): string {
+function getRootDir() {
   return path.join(__dirname, '../../')
 }
 

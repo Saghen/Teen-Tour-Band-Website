@@ -10,7 +10,7 @@ import User from '@models/User'
 const authConfig = config.get('auth')
 
 export default {
-  async login({ username, password }): Promise<string> {
+  async login({ username, password }) {
     if (!authConfig.enabled) return objectToToken({ admin: true })
     BadRequest.assert(username && password, 'A username and password must be provided')
     // TODO: Check types
@@ -37,6 +37,5 @@ export default {
       officeIds: user.computedOfficeIds,
     })
   },
-  // NOTE: Commented out until use to resolve eslint errors
-/*  async signup({ firstName, lastName, username, password, inviteCode }): Promise<void> {}, */
+  async signup({ firstName, lastName, username, password, inviteCode }) {},
 }

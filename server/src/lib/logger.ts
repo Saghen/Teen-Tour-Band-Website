@@ -12,11 +12,9 @@ import getRootDir from '@helpers/get-root-dir'
 const { combine, colorize, label, simple, timestamp } = format
 const loggerConfig = config.get('logger')
 
-type ChalkFuncType = (s: string) => any;
-
-function addToBeginning(logLabel, chalkFunc: ChalkFuncType) {
+function addToBeginning(label, chalkFunc) {
   return format((info) => {
-    info.level = `${chalkFunc(logLabel)}: ${info.level}`
+    info.level = `${chalkFunc(label)}: ${info.level}`
     return info
   })()
 }
@@ -28,13 +26,13 @@ function json(replacer, space) {
   })()
 }
 
-function createConsoleTransport(logLabel?: string, chalkFunc?: ChalkFuncType): transports.ConsoleTransportInstance | void {
+function createConsoleTransport(label?: string, chalkFunc?: Function): transports.ConsoleTransportInstance | void {
   if (!loggerConfig.console.enabled) return
   const formatFuncs = [colorize(), simple()]
-  if (logLabel) {
+  if (label) {
     if (!chalkFunc) throw new Error('Must provide chalk function when using a label')
 
-    formatFuncs.splice(1, 0, addToBeginning(logLabel, chalkFunc))
+    formatFuncs.splice(1, 0, addToBeginning(label, chalkFunc))
   }
   return new transports.Console({
     level: loggerConfig.console.level,
@@ -51,9 +49,7 @@ function createFileTransport(labelText?: string): transports.FileTransportInstan
 
   try {
     fs.mkdirSync(logDir)
-  } catch (err) {
-    return
-  }
+  } catch (err) {}
 
   const formatFuncs = [json(undefined, config.get('env') !== 'production' ? 2 : 0), timestamp()]
   if (labelText) formatFuncs.unshift(label({ label: labelText }))
@@ -92,9 +88,8 @@ const logger: LoggerWithExtras = Object.defineProperties(
 
 export default logger
 
-// TODO: Come up with a better name for logger
-export const waitForLogger = async (logger_: any): Promise<unknown> => {
-  const loggerDone = new Promise((resolve) => logger_.on('finish', resolve))
-  logger_.close()
+export const waitForLogger = async (logger) => {
+  const loggerDone = new Promise((resolve) => logger.on('finish', resolve))
+  logger.close()
   return loggerDone
 }

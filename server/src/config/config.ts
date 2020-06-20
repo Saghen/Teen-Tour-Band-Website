@@ -1,6 +1,7 @@
 import convict from 'convict'
 import path from 'path'
 import getRootDir from '@helpers/get-root-dir'
+import fs from 'fs'
 
 import activeConfigs from './activeConfigs.json'
 

@@ -1,15 +1,14 @@
-/* eslint-disable func-names */
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
 import { isPermissionEnum } from '@helpers/validators'
 import { PERMISSIONS } from '@constants'
 
-function validateLocalStrategyProperty(property): number {
+function validateLocalStrategyProperty(property) {
   return property.length
 }
 
-function validatePassword(password): boolean {
+function validatePassword(password) {
   return password && password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+/.test(password)
 }
 
@@ -64,7 +63,7 @@ const UserSchema = new mongoose.Schema(
 /**
  * Password hashing and comparing
  */
-UserSchema.pre('save', async function (): Promise<void> {
+UserSchema.pre('save', async function () {
   const user = this
   if (!user.isModified('password') || user.password === undefined) return
 
@@ -73,11 +72,11 @@ UserSchema.pre('save', async function (): Promise<void> {
   user.password = hash
 })
 
-UserSchema.methods.comparePassword = async function (password): Promise<boolean> {
-  return bcrypt.compare(password, this.password)
+UserSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password)
 }
 
-UserSchema.methods.toJSON = function (): unknown {
+UserSchema.methods.toJSON = function () {
   const obj = this.toObject()
   delete obj.password
   return obj
