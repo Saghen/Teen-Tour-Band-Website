@@ -18,10 +18,9 @@
     }
   },
   "lint-staged": {
-    "src/**/*.ts": [
+    "src/*": [
       "eslint --fix --ext .ts src",
-      "pretty-quick --staged",
-      "git add"
+      "pretty-quick --staged"
     ]
   },
   "dependencies": {
