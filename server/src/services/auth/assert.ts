@@ -1,4 +1,4 @@
-import { BadRequest, Forbidden, NotFound } from 'fejl'
+import { Forbidden } from 'fejl'
 
 const assertInvalidToken = Forbidden.makeAssert('The token is invalid')
 const assertNotLoggedIn = Forbidden.makeAssert('You must be logged in')

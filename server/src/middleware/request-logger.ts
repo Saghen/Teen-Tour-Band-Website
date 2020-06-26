@@ -10,6 +10,8 @@ import chalk from 'chalk'
 import { performance } from 'perf_hooks'
 import http from 'http'
 import prettyBytes from 'pretty-bytes'
+import { Context } from '@middleware/types'
+import { Next } from 'koa'
 
 const loggerConfig = config.get('logger')
 const accessLogStream = fs.createWriteStream(
@@ -24,8 +26,17 @@ interface ErrorInfo {
   stack?: string
 }
 
-export default function createRequestLogger(label, labelColorFunc) {
-  return async (ctx, next) => {
+type LabelColorFuncType = (s: string) => any
+
+function writeObjectToFile(obj) {
+  accessLogStream.write(
+    `${JSON.stringify(obj, undefined, config.get('env') !== 'production' ? 2 : 0)},\n`,
+    (err) => err && (logger.error('Error while writing logs to file') || logger.error(err.message))
+  )
+}
+
+export default function createRequestLogger(label: string, labelColorFunc: LabelColorFuncType) {
+  return async (ctx: Context, next: Next): Promise<void> => {
     const hash = Math.round(Math.random() * Number.MAX_SAFE_INTEGER)
       .toString(16)
       .slice(0, 5)
@@ -51,8 +62,9 @@ export default function createRequestLogger(label, labelColorFunc) {
     } catch (err) {
       // TODO: Use validation error instance of
       if (Array.isArray(err.failures)) {
+        // NOTE: Need to add semicolon here to denote that [ctx.body] is not apart of the previous statement
         ctx.status = 400
-        ctx.body = err.failures[0]
+        ;[ctx.body] = err.failures
         errorInfo.message = ctx.body.message
       } else {
         ctx.status = err.statusCode || 500
@@ -96,11 +108,4 @@ export default function createRequestLogger(label, labelColorFunc) {
       writeObjectToFile(responseInfo)
     }
   }
-}
-
-function writeObjectToFile(obj) {
-  accessLogStream.write(
-    `${JSON.stringify(obj, undefined, config.get('env') !== 'production' ? 2 : 0)},\n`,
-    (err) => err && (logger.error('Error while writing logs to file') || logger.error(err.message))
-  )
 }

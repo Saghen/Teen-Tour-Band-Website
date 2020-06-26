@@ -1,6 +1,15 @@
 import querystring from 'querystring'
 
-function ConnectionString(params) {
+type ParamsType = {
+  protocol: string
+  username: string
+  password: string
+  hosts: string
+  database: string
+  options?: any
+}
+
+function ConnectionString(params: ParamsType): void {
   if (!params) {
     throw new Error("Connection string 'params' are required")
   }
@@ -32,7 +41,7 @@ function ConnectionString(params) {
  *
  * @returns {string} - a mongodb compatible URI connection string.
  */
-ConnectionString.prototype.toURI = function () {
+ConnectionString.prototype.toURI = function (): string {
   //  Build the full connection string.
   const protocolPart = this.protocol || 'mongodb://'
   const authPart = this.username ? `${encodeURIComponent(this.username)}:${encodeURIComponent(this.password)}@` : ''
@@ -59,7 +68,7 @@ ConnectionString.prototype.toURI = function () {
  * @returns {string} - a human readable connection string. Not URI encoded, with
  * the password masked.
  */
-ConnectionString.prototype.toString = function () {
+ConnectionString.prototype.toString = function (): string {
   //  Create a safe version of the password.
   const safePassword = this.password ? this.password.replace(/./g, '*') : null
 

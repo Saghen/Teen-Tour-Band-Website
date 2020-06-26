@@ -1,15 +1,27 @@
+/* eslint-disable func-names */
+
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
 import { isPermissionEnum } from '@helpers/validators'
 import { PERMISSIONS } from '@constants'
 
-function validateLocalStrategyProperty(property) {
+function validateLocalStrategyProperty(property): number {
   return property.length
 }
 
-function validatePassword(password) {
+function validatePassword(password): boolean {
   return password && password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+/.test(password)
+}
+
+export type UserDocument = mongoose.Document & {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  // TODO: Convert to custom permission enum
+  permissionEnum?: string;
+  archived?: boolean
 }
 
 const UserSchema = new mongoose.Schema(
@@ -38,11 +50,6 @@ const UserSchema = new mongoose.Schema(
         'Password must contain an uppercase, lowercase, and a digit and be atleast 8 characters.',
       ],
     },
-    virtualOffices: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'VirtualOffice' }],
-      default: [],
-      // TODO: Check if Virtual Offices exist
-    },
     permissionEnum: {
       type: String,
       default: 'DEFAULT',
@@ -63,7 +70,7 @@ const UserSchema = new mongoose.Schema(
 /**
  * Password hashing and comparing
  */
-UserSchema.pre('save', async function () {
+UserSchema.pre('save', async function (): Promise<void> {
   const user = this
   if (!user.isModified('password') || user.password === undefined) return
 
@@ -72,11 +79,11 @@ UserSchema.pre('save', async function () {
   user.password = hash
 })
 
-UserSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password)
+UserSchema.methods.comparePassword = async function (password): Promise<boolean> {
+  return bcrypt.compare(password, this.password)
 }
 
-UserSchema.methods.toJSON = function () {
+UserSchema.methods.toJSON = function (): unknown {
   const obj = this.toObject()
   delete obj.password
   return obj
@@ -95,6 +102,6 @@ UserSchema.virtual('permissionLevel')
     this.set({ permissionEnum: permissionEnum[0] })
   })
 
-const User = mongoose.model('User', UserSchema)
+const User = mongoose.model<UserDocument>('User', UserSchema)
 
 export default User
