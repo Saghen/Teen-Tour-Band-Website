@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths": {
+      "Components/*": ["./components/*"],
+      "Views/*": ["./views/*"],
+      "Styles/*": ["./styles/*"],
+      "Config": ["./config.js"],
+      "Constants": ["./constants.ts"],
+      "Helpers/*": ["./helpers/*"],
+      "Helpers": ["./helpers/index"],
+      "Store/*": ["./store/*"],
+      "Services/*": ["./services/*"],
+      "Request": ["./request.ts"],
+      "Root/*": ["./*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
