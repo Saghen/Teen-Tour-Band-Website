@@ -167,7 +167,7 @@ const config = convict({
     cookie: {
       doc: 'Name of the cookie',
       format: String,
-      default: 'review-token',
+      default: 'token',
     },
     username: {
       doc: 'Username for authentication',
