@@ -16,15 +16,15 @@ interface IColor {
 }
 
 interface IColors {
-  primary: IColor,
-  secondary: IColor,
-  background: IColor,
+  primary: IColor
+  secondary: IColor
+  background: IColor
   backgroundInverted: IColor
   red: IColor
   green: IColor
 }
 
-let colors: IColors = {
+const colors: IColors = {
   primary: {
     default: '#e6222c',
     text: '#fff',
