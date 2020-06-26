@@ -8,7 +8,8 @@
     "dev": "concurrently --raw \"tsc -w\" \"nodemon --delay 0.3 --unhandled-rejections=strict dist/server.js\"",
     "generateKey": "ts-node src/helpers/generateKey.ts",
     "lint": "eslint --fix --ext .ts src && prettier --write \"src/**/*.ts\"",
-    "config": "ts-node src/config/setConfigs.ts"
+    "config": "ts-node src/config/setConfigs.ts",
+    "check-tsc-version": "tsc -v"
   },
   "author": "",
   "license": "MIT",
@@ -22,6 +23,9 @@
       "eslint --fix --ext .ts src",
       "pretty-quick --staged"
     ]
+  },
+  "engines": {
+    "node": ">=14.0"
   },
   "dependencies": {
     "@emotion/hash": "^0.8.0",
