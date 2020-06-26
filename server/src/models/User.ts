@@ -14,6 +14,16 @@ function validatePassword(password): boolean {
   return password && password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+/.test(password)
 }
 
+export type UserDocument = mongoose.Document & {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  // TODO: Convert to custom permission enum
+  permissionEnum?: string;
+  archived?: boolean
+}
+
 const UserSchema = new mongoose.Schema(
   {
     firstName: {
@@ -39,11 +49,6 @@ const UserSchema = new mongoose.Schema(
         validatePassword,
         'Password must contain an uppercase, lowercase, and a digit and be atleast 8 characters.',
       ],
-    },
-    virtualOffices: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'VirtualOffice' }],
-      default: [],
-      // TODO: Check if Virtual Offices exist
     },
     permissionEnum: {
       type: String,
@@ -97,6 +102,6 @@ UserSchema.virtual('permissionLevel')
     this.set({ permissionEnum: permissionEnum[0] })
   })
 
-const User = mongoose.model('User', UserSchema)
+const User = mongoose.model<UserDocument>('User', UserSchema)
 
 export default User

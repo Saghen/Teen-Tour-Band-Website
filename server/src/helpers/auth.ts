@@ -10,7 +10,7 @@ import { PERMISSIONS } from '@constants'
 
 import { assertNotLoggedIn, assertNotAuthorized, assertMustBeAdmin } from '@services/auth/assert'
 
-const secretKey = createSecretKey(Buffer.from(JSON.stringify(config.get('auth.secret'))))
+const secretKey = createSecretKey(Buffer.from(config.get('auth.secret')))
 
 interface AuthMiddlewareOptions {
   passthrough: boolean
