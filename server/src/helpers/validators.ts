@@ -4,6 +4,17 @@ import { assertMustBeOfType, assertObjectIdGenerator, assertArrayMustContainItem
 
 const isObjectId = mongoose.Types.ObjectId.isValid
 
+function isValidUserEntry(firstName, lastName, username, email, phone, password, inviteCode) {
+  if (typeof firstName !== "string") return false
+  if (typeof (lastName) !== "string") return false
+  if (typeof (username) !== "string") return false
+  if (typeof (email) !== "string") return false
+  if (typeof (phone) !== "string") return false
+  if (typeof (password) !== "string") return false
+  if (typeof (inviteCode) !== "string") return false
+  return true
+}
+
 function isPermissionEnum(permissionEnum: PERMISSIONS): boolean {
   return Object.keys(PERMISSIONS).includes(permissionEnum)
 }
@@ -28,4 +39,4 @@ function validateArrayOfObjectIds(property, data): void {
   assertObjectIdGenerator(`${property} child items'`)(data.every(isObjectId))
 }
 
-export { isObjectId, isPermissionEnum, isPermissionLevel, validateArrayOfObjectIds, isStatus, isAlertLevel }
+export { isValidUserEntry, isObjectId, isPermissionEnum, isPermissionLevel, validateArrayOfObjectIds, isStatus, isAlertLevel }
