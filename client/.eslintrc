@@ -1,0 +1,52 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/react"
+  ],
+  "plugins": ["prettier", "@typescript-eslint"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "space-before-function-paren": "off",
+    "react/prefer-stateless-function": "warn",
+    "react/jsx-one-expression-per-line": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+    "linebreak-style": "off",
+    "global-require": "off",
+    "semi": "off",
+    "arrow-body-style": "off",
+    "no-multiple-empty-lines": ["warn", { "max": 1 }],
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTaggedTemplates": true
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "import/no-unresolved": "off",
+    "import/no-mutable-exports": "off",
+    "import/prefer-default-export": "off",
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "consistent-return": "off",
+    "@typescript-eslint/no-explicit-any": "off"
+  }
+}

@@ -26,7 +26,7 @@ router.post('/login', async (ctx) => {
 
   ctx.cookies.set(config.get('auth').cookie, token, cookieConfigHttpOnly)
 
-  ctx.cookies.set('review-loggedIn', true, cookieConfig)
+  ctx.cookies.set('loggedIn', true, cookieConfig)
 
   ctx.ok({ message: 'Successfully logged in', token })
 })
@@ -46,7 +46,7 @@ router.get('/get', authMiddleware(), (ctx) => ctx.ok(ctx.user))
 router.get('/logout', async (ctx) => {
   ctx.cookies.set(config.get('auth').cookie, '', cookieConfigHttpOnly)
 
-  ctx.cookies.set('review-loggedIn', false, cookieConfig)
+  ctx.cookies.set('loggedIn', false, cookieConfig)
 
   ctx.ok({ message: 'Successfully logged out' })
 })
