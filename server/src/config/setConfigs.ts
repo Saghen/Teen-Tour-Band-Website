@@ -5,6 +5,7 @@ import path from 'path'
 import chalk from 'chalk'
 
 import getRootDir from '../helpers/get-root-dir'
+import generateKey from './generateKey'
 
 const rootDir = getRootDir()
 console.log(__dirname)
@@ -64,3 +65,7 @@ const selectedConfigs = ans.split(',').map((val) => val.trim())
 if (selectedConfigs.length === 1 && selectedConfigs[0] === '') selectedConfigs.shift()
 exitIfConfigsDontExist(selectedConfigs)
 storeConfigs(selectedConfigs)
+
+if (['y', 'yes'].includes(readline.question('Would you like to generate a new key? (Y/n): ').toLowerCase())) {
+  generateKey().then(() => console.log(chalk.bold.blue('New key generated'))).catch(console.error)
+}

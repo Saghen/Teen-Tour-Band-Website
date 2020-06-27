@@ -6,10 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "concurrently --raw \"tsc -w\" \"nodemon --delay 0.3 --unhandled-rejections=strict dist/server.js\"",
-    "generateKey": "ts-node src/helpers/generateKey.ts",
     "lint": "eslint --fix --ext .ts src && prettier --write \"src/**/*.ts\"",
-    "config": "ts-node src/config/setConfigs.ts",
-    "check-tsc-version": "tsc -v"
+    "config": "ts-node src/config/setConfigs.ts"
   },
   "author": "",
   "license": "MIT",
