@@ -1,11 +1,14 @@
-import { BadRequest, Forbidden, NotFound } from 'fejl'
+import { BadRequest, Conflict, Forbidden, NotAcceptable, NotFound } from 'fejl'
 
 import { objectToToken, comparePassword } from '@helpers/auth'
+import { isValidUserEntry } from '@helpers/validators'
 
 import { PERMISSIONS } from '@constants'
 import config from '@config'
 
 import User from '@models/User'
+import InviteCode from '@models/InviteCode'
+import { MongoError } from './assert'
 
 const authConfig = config.get('auth')
 
@@ -33,9 +36,52 @@ export default {
     return objectToToken({
       id: user._id,
       username,
-      virtualOfficeIds: user.virtualOffices,
-      officeIds: user.computedOfficeIds,
     })
   },
-  /*  async signup({ firstName, lastName, username, password, inviteCode }) {}, */
+
+  /*
+  NOTE:
+    - Add invite code checker - done
+    - Invite code gives permissions? - yes
+    - What do permissions look like, just names? - Permission enum
+    - Give user permission based off of invite code
+  */
+  async signup({ firstName, lastName, username, email, phone, password, inviteCode }) {
+    if (!authConfig.enabled) return objectToToken({ admin: true })
+  
+    // Ensure we have all the parts
+    BadRequest.assert(username && password && firstName && lastName && email && phone && inviteCode,
+      'Please provide a first name, last name, username, password, email, phone number, and an invite code.')
+
+    // Type checking
+    NotAcceptable.assert(isValidUserEntry(firstName, lastName, username, email, phone, password, inviteCode), 'Please specify valid types for the parameters of the user')
+    
+    // Move username to lowercase
+    username = username.toLowerCase()
+    
+    // Check if user with username already exists
+    const checkUser = await User.findOne({ username, email })
+    Conflict.assert(!checkUser, 'User already exists with that username.')
+
+    // Check for invite code and validate it
+    const invite = await InviteCode.findOne({ inviteCode })
+    NotFound.assert(invite, 'That invite code does not exist')
+    Forbidden.assert(!invite.used, 'The invite code is already used')
+
+    // Mark the invite code as used
+    invite.used = true;
+    await invite.save().catch((err) => {
+      MongoError.assert(!err, 'There was a mongodb error')
+    })
+
+    // Get the permission that is granted
+    let permissionEnum = invite.permissionGranted
+
+    // Create the user
+    const user = await User.create({ firstName, lastName, username, password, email, phone, permissionEnum })
+    return objectToToken({
+      id: user._id,
+      username,
+    })
+  },
 }

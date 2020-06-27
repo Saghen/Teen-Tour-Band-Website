@@ -14,10 +14,20 @@ function validatePassword(password): boolean {
   return password && password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+/.test(password)
 }
 
+function validateEmail(email): boolean {
+  return email && /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)
+}
+
+function validatePhone(phone): boolean {
+  return phone && /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/.test(phone)
+}
+
 export type UserDocument = mongoose.Document & {
   firstName: string;
   lastName: string;
   username: string;
+  email: string;
+  phone: string;
   password: string;
   // TODO: Convert to custom permission enum
   permissionEnum?: string;
@@ -41,7 +51,28 @@ const UserSchema = new mongoose.Schema(
       lowercase: true,
       required: true,
       index: true,
-      validate: [validateLocalStrategyProperty, 'A username must be provided'],
+      validate: [
+        validateLocalStrategyProperty,
+        'A username must be provided'
+      ],
+    },
+    email: {
+      type: String,
+      unique: true, 
+      required: true,
+      index: true,
+      validate: [
+        validateEmail,
+        'A valid email must be provided'
+      ],
+    },
+    phone: {
+      type: String,
+      required: true,
+      validate: [
+        validatePhone,
+        'A valid phone number must be provided'
+      ]
     },
     password: {
       type: String,
@@ -53,7 +84,10 @@ const UserSchema = new mongoose.Schema(
     permissionEnum: {
       type: String,
       default: 'DEFAULT',
-      validate: [isPermissionEnum, 'The permission level must be one of the enum keys'],
+      validate: [
+        isPermissionEnum,
+        'The permission level must be one of the enum keys'
+      ],
     },
     archived: Boolean,
   },

@@ -31,7 +31,15 @@ router.post('/login', async (ctx) => {
   ctx.ok({ message: 'Successfully logged in', token })
 })
 
-/* router.post('/signup', async (ctx) => {}) */
+router.post('/signup', async (ctx) => {
+  const token = await authService.signup(ctx.request.body)
+
+  ctx.cookies.set(config.get('auth').cookie, token, cookieConfigHttpOnly)
+
+  ctx.cookies.set('review-loggedIn', true, cookieConfig)
+
+  ctx.ok({ message: 'Successfully signed up', token })
+})
 
 router.get('/get', authMiddleware(), (ctx) => ctx.ok(ctx.user))
 
