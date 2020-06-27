@@ -44,21 +44,21 @@ export default {
     - Add invite code checker - done
     - Invite code gives permissions? - yes
     - What do permissions look like, just names? - Permission enum
-    - Give user permission based off of invite code
+    - Give user permission based off of invite code - done
   */
   async signup({ firstName, lastName, username, email, phone, password, inviteCode }) {
     if (!authConfig.enabled) return objectToToken({ admin: true })
-  
+
     // Ensure we have all the parts
     BadRequest.assert(username && password && firstName && lastName && email && phone && inviteCode,
       'Please provide a first name, last name, username, password, email, phone number, and an invite code.')
 
     // Type checking
     NotAcceptable.assert(isValidUserEntry(firstName, lastName, username, email, phone, password, inviteCode), 'Please specify valid types for the parameters of the user')
-    
+
     // Move username to lowercase
     username = username.toLowerCase()
-    
+
     // Check if user with username already exists
     const checkUser = await User.findOne({ username, email })
     Conflict.assert(!checkUser, 'User already exists with that username.')
@@ -75,7 +75,7 @@ export default {
     })
 
     // Get the permission that is granted
-    let permissionEnum = invite.permissionGranted
+    const permissionEnum = invite.permissionGranted
 
     // Create the user
     const user = await User.create({ firstName, lastName, username, password, email, phone, permissionEnum })

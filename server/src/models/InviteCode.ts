@@ -1,10 +1,8 @@
 /* eslint-disable func-names */
 
 import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
 
 import { isPermissionEnum } from '@helpers/validators'
-import { PERMISSIONS } from '@constants'
 
 export type InviteCodeDocument = mongoose.Document & {
   inviteCode: string,
@@ -46,11 +44,6 @@ const InviteCodeSchema = new mongoose.Schema(
     },
   }
 )
-
-InviteCodeSchema.methods.toJSON = function (): unknown {
-  const obj = this.toObject()
-  return obj
-}
 
 const InviteCode = mongoose.model<InviteCodeDocument>('InviteCode', InviteCodeSchema)
 

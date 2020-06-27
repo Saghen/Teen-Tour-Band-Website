@@ -21,15 +21,15 @@ const cookieConfigHttpOnly = {
 
 router.prefix('/invitecode')
 
-router.post('/create' ,/*  authMiddleware({
+router.post('/create', /*  authMiddleware({
   permissionLevel: 1,
   passthrough: false,
 }), */ async (ctx) => {
   // TODO: Allow permission type to be passed through to create
-  const inviteCode = await inviteCodeService.create()
+    const inviteCode = await inviteCodeService.create()
 
-  ctx.ok({ message: 'Invite Code Created', inviteCode })
-})
+    ctx.ok({ message: 'Invite Code Created', inviteCode })
+  })
 
 router.get('/get', (ctx) => { })
 

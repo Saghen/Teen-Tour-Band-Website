@@ -5,13 +5,13 @@ import { assertMustBeOfType, assertObjectIdGenerator, assertArrayMustContainItem
 const isObjectId = mongoose.Types.ObjectId.isValid
 
 function isValidUserEntry(firstName, lastName, username, email, phone, password, inviteCode) {
-  if (typeof firstName !== "string") return false
-  if (typeof (lastName) !== "string") return false
-  if (typeof (username) !== "string") return false
-  if (typeof (email) !== "string") return false
-  if (typeof (phone) !== "string") return false
-  if (typeof (password) !== "string") return false
-  if (typeof (inviteCode) !== "string") return false
+  if (typeof firstName !== 'string') return false
+  if (typeof (lastName) !== 'string') return false
+  if (typeof (username) !== 'string') return false
+  if (typeof (email) !== 'string') return false
+  if (typeof (phone) !== 'string') return false
+  if (typeof (password) !== 'string') return false
+  if (typeof (inviteCode) !== 'string') return false
   return true
 }
 

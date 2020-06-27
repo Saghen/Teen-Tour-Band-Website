@@ -19,7 +19,7 @@
     }
   },
   "lint-staged": {
-    "src/*": [
+    "src/**/*.ts": [
       "npm run lint",
       "pretty-quick --staged"
     ]
