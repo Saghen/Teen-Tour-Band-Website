@@ -1,10 +1,16 @@
 import KoaRouter from 'koa-router'
 import config from '@config'
-import inviteCodeService from '@services/invitecodes/service'
+
+import permissionService from '@services/permissions/service'
 
 import { authMiddleware } from '@helpers/auth'
 
 const router = new KoaRouter()
+
+/* 
+  NOTE: Should we make this handle all permission and creation or no?
+
+*/
 
 const cookieConfig = {
   secure: config.get('ssl'),
@@ -19,25 +25,16 @@ const cookieConfigHttpOnly = {
   httpOnly: true,
 }
 
-router.prefix('/invitecode')
+router.prefix('/permissions')
 
-
-router.post('/create', authMiddleware({
+router.post('/create',  authMiddleware({
   permissionGroup: 'ADMIN',
   passthrough: true,
-  endpoint: 'invitecode'
+  endpoint: 'permissions'
 }), async (ctx) => {
-  // Pre-define the invite code
-    let inviteCode: string;
-
-    // TODO: Check if parameters exist on the body
-
-    // TODO: Add verfication of types
-
-    // TODO: Never allow a user to create an invite code higher than their own permission
-    inviteCode = await inviteCodeService.create(ctx.request.body)
-
-  ctx.ok({ message: 'Invite Code Created', inviteCode })
+  const permissionName = await permissionService.create(ctx.request.body)
+  
+  ctx.ok({ message: 'Permission created', permissionName })
 })
 
 router.get('/get', (ctx) => { })

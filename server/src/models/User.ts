@@ -3,7 +3,7 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
-import { isPermissionEnum } from '@helpers/validators'
+import { isPermissionGroup, isPermissionType } from '@helpers/validators'
 import { PERMISSIONS } from '@constants'
 
 function validateLocalStrategyProperty(property): number {
@@ -30,7 +30,8 @@ export type UserDocument = mongoose.Document & {
   phone: string;
   password: string;
   // TODO: Convert to custom permission enum
-  permissionEnum?: string;
+  group?: string;
+  type: string;
   archived?: boolean
 }
 
@@ -81,13 +82,20 @@ const UserSchema = new mongoose.Schema(
         'Password must contain an uppercase, lowercase, and a digit and be atleast 8 characters.',
       ],
     },
-    permissionEnum: {
+    group: {
       type: String,
-      default: 'DEFAULT',
+      default: 'MEMBER',
       validate: [
-        isPermissionEnum,
-        'The permission level must be one of the enum keys'
+        isPermissionGroup,
+        'Permission group must exist'
       ],
+    },
+    type: {
+      type: String,
+      validate: [
+        isPermissionType,
+        'Permission type must exist'
+      ]
     },
     archived: Boolean,
   },
@@ -122,19 +130,6 @@ UserSchema.methods.toJSON = function (): unknown {
   delete obj.password
   return obj
 }
-
-/**
- * Permission Level Virtual
- */
-UserSchema.virtual('permissionLevel')
-  .get(function getPermissionLevel() {
-    return PERMISSIONS[this.permisionEnum]
-  })
-  .set(function setPermissionLevel(permissionLevel) {
-    const permissionEnum = Object.entries(PERMISSIONS).find((permission) => permission[1] === permissionLevel)
-    if (!permissionEnum) throw new Error('The permission enum was not found')
-    this.set({ permissionEnum: permissionEnum[0] })
-  })
 
 const User = mongoose.model<UserDocument>('User', UserSchema)
 

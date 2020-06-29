@@ -2,36 +2,49 @@
 
 import mongoose from 'mongoose'
 
-import { isPermissionEnum } from '@helpers/validators'
+// import { isPermissionEnum } from '@helpers/validators'
 
 export type PermissionDocument = mongoose.Document & {
+  isGroup: boolean;
   name: string;
-  allow: string[];
-  deny: string[];
-  level: number;
-  inherit: mongoose.Schema.Types.ObjectId;
+  validSubtypes?: string[];
+  methods?: string[];
+  endpoints?: string[];
+  permissionLevel?: number;
+  children?: string[];
 }
 
 const PermissionSchema = new mongoose.Schema(
   {
+    isGroup: {
+      type: Boolean,
+      required: true
+    },
     name: {
       type: String,
       required: true,
+      unique: true,
+      index: true
     },
-    allow: {
+    validSubtypes: {
       type: Array,
-      required: true
+      required: false
     },
-    deny: {
+    methods: {
       type: Array,
-      required: true
+      required: false
     },
-    level: {
+    endpoints: {
+      type: Array,
+      required: false
+    },
+    permissionLevel: {
       type: Number,
-      default: 0
+      required: false
     },
-    inherit: {
-      type: mongoose.Schema.Types.ObjectId
+    children: {
+      type: Array,
+      required: false
     }
   }
 )

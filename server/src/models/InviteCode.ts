@@ -1,13 +1,13 @@
 /* eslint-disable func-names */
 
 import mongoose from 'mongoose'
-
-import { isPermissionEnum } from '@helpers/validators'
+import { isPermissionGroup, isPermissionType } from '@helpers/validators'
 
 export type InviteCodeDocument = mongoose.Document & {
   inviteCode: string,
   referer?: mongoose.Schema.Types.ObjectId;
-  permissionGranted?: string;
+  permissionGroup: string;
+  permissionType: string;
   used?: boolean;
 }
 
@@ -21,11 +21,19 @@ const InviteCodeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
-    permissionGranted: {
+    permissionGroup: {
       type: String,
       default: 'DEFAULT',
       validate: [
-        isPermissionEnum,
+        isPermissionGroup,
+        'The permission level must be one of the enum keys'
+      ],
+    },
+    permissionType: {
+      type: String,
+      default: 'DEFAULT',
+      validate: [
+        isPermissionType,
         'The permission level must be one of the enum keys'
       ],
     },

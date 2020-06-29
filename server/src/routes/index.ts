@@ -2,10 +2,11 @@ import KoaRouter from 'koa-router'
 
 import authRoutes from './auth/auth-api'
 import inviteCodeRoutes from './invitecode/invite-codes'
+import permisionRoutes from './permissions/permissions'
 
 const router = new KoaRouter()
 
-const apiRouters = [authRoutes, inviteCodeRoutes]
+const apiRouters = [authRoutes, inviteCodeRoutes, permisionRoutes ]
 
 for (const apiRouter of apiRouters) {
   router.use(apiRouter.routes())

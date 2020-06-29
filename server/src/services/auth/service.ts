@@ -36,6 +36,8 @@ export default {
     return objectToToken({
       id: user._id,
       username,
+      permissionGroup: user.group,
+      permissionType: user.type
     })
   },
 
@@ -61,7 +63,7 @@ export default {
 
     // Check if user with username already exists
     const checkUser = await User.findOne({ username, email })
-    Conflict.assert(!checkUser, 'User already exists with that username.')
+    Conflict.assert(!checkUser, 'User already exists with that username or email.')
 
     // Check for invite code and validate it
     const invite = await InviteCode.findOne({ inviteCode })
@@ -75,13 +77,17 @@ export default {
     })
 
     // Get the permission that is granted
-    const permissionEnum = invite.permissionGranted
+    const group = invite.permissionGroup
+
+    const type = invite.permissionType
 
     // Create the user
-    const user = await User.create({ firstName, lastName, username, password, email, phone, permissionEnum })
+    const user = await User.create({ firstName, lastName, username, password, email, phone, group, type })
     return objectToToken({
       id: user._id,
       username,
+      permissionGroup: user.group,
+      permissionType: user.type
     })
   },
 }
