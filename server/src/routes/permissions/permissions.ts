@@ -29,7 +29,6 @@ router.prefix('/permissions')
 
 router.post('/create', authMiddleware({
   permissionGroup: 'ADMIN',
-  passthrough: true,
   endpoint: 'permissions'
 }), async (ctx) => {
   const permissionName = await permissionService.create(ctx.request.body)
@@ -39,7 +38,6 @@ router.post('/create', authMiddleware({
 
 router.post('/assign', authMiddleware({
   permissionGroup: 'ADMIN',
-  passthrough: true,
   endpoint: 'permissions'
 }), async (ctx) => {
 
@@ -50,7 +48,6 @@ router.post('/assign', authMiddleware({
 
 router.post('/remove', authMiddleware({
   permissionGroup: 'ADMIN',
-  passthrough: true,
   endpoint: 'permissions'
 }), async (ctx) => {
 
@@ -61,7 +58,6 @@ router.post('/remove', authMiddleware({
 
 router.get('/get', authMiddleware({
   permissionGroup: 'ADMIN',
-  passthrough: true,
   endpoint: 'permissions'
 }), async (ctx) => {
   const permission = await permissionService.get(ctx.request.body)
@@ -71,7 +67,6 @@ router.get('/get', authMiddleware({
 
 router.get('/delete', authMiddleware({
   permissionGroup: 'ADMIN',
-  passthrough: true,
   endpoint: 'permissions'
 }), async (ctx) => {
   const permission = await permissionService.delete(ctx.request.body)

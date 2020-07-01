@@ -47,35 +47,36 @@ const secretKey = createSecretKey(Buffer.from(config.get('auth.secret')))
 */
 
 interface AuthMiddlewareOptions {
-  passthrough: boolean
   permissionGroup: string
   endpoint: string
 }
 
-function authMiddleware(options: AuthMiddlewareOptions = { passthrough: false, permissionGroup: 'DEFAULT', endpoint: '' }) {
+function authMiddleware(options: AuthMiddlewareOptions = {permissionGroup: 'DEFAULT', endpoint: '' }) {
   return async (ctx: Context, next: Next): Promise<any> => {
-    const { passthrough = false, permissionGroup = 'DEFAULT', endpoint = '' } = options
+    const {permissionGroup = 'DEFAULT', endpoint = '' } = options
     const token = ctx.cookies.get(config.get('auth').cookie)
-    assertNotLoggedIn(token || passthrough)
+
+    assertNotLoggedIn(token)
     assertNotValidEndpoint(endpoint !== '')
 
-    if (token || !passthrough) {
+    if (token) {
       try {
         ctx.user = await V2.decrypt(token, secretKey)
-
       } catch (err) {
         return ctx.forbidden({ message: 'The token is invalid', invalidToken: true })
       }
     }
 
+    assertNotAuthorized(ctx.user)
+
     // Check if they dont want to passthrough or if the user exists
-    if (!passthrough || ctx.user) {
+    if (ctx.user) {
       const userPerm = await Permission.findOne({ name: ctx.user.permissionGroup })
       const wantedPerm = await Permission.findOne({ name: permissionGroup })
       
       // Check to see if the permissions exist
       NotFound.assert(userPerm && wantedPerm, 'The permission roles are missing from the database')
-
+        
       // Check to make sure they are high enough
       assertNotAuthorized(userPerm.permissionLevel >= wantedPerm.permissionLevel)
       

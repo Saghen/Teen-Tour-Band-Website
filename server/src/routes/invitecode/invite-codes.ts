@@ -23,7 +23,6 @@ router.prefix('/invitecode')
 
 router.post('/create', authMiddleware({
   permissionGroup: 'ADMIN',
-  passthrough: true,
   endpoint: 'invitecode'
 }), async (ctx) => {
   // Pre-define the invite code

@@ -25,7 +25,6 @@ router.prefix('/photos')
 
 router.get('/get/:name/:size', authMiddleware({
   permissionGroup: 'MEMBER',
-  passthrough: true,
   endpoint: 'photos'
 }), async (ctx) => {
 
@@ -37,12 +36,18 @@ router.get('/get/:name/:size', authMiddleware({
 
 router.post('/upload', authMiddleware({
   permissionGroup: 'MEMBER',
-  passthrough: true,
   endpoint: 'photos'
 }),  KoaBody(), async (ctx) => {
   const { path, name, type } = ctx.request.files.file
   const fileName = await photoService.add({ filePath: path, name, type })
   ctx.ok({ message: 'Photo succesfully saved', fileName})
+})
+
+router.delete('/delete', authMiddleware({
+  permissionGroup: 'ADMIN',
+  endpoint: 'photos'
+}), async (ctx) => {
+  ctx.ok({ message: 'Photo succesfully deleted'})
 })
 
 export default router
