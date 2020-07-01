@@ -1,8 +1,8 @@
 import KoaRouter from 'koa-router'
 import KoaBody from 'koa-body'
 import config from '@config'
-import * as fs from 'fs'
-import * as Path from 'path'
+
+import photoService from '@services/photos/service'
 
 import { authMiddleware } from '@helpers/auth'
 
@@ -23,13 +23,16 @@ const cookieConfigHttpOnly = {
 
 router.prefix('/photos')
 
-router.get('/get', authMiddleware({
+router.get('/get/:name/:size', authMiddleware({
   permissionGroup: 'MEMBER',
   passthrough: true,
   endpoint: 'photos'
 }), async (ctx) => {
 
-  ctx.ok({ message: 'WOW' })
+  const { name, size } = ctx.params
+  const file = await photoService.get({name, size})
+  ctx.response.type = 'image/png';
+  ctx.body = file
 })
 
 router.post('/upload', authMiddleware({
@@ -37,17 +40,9 @@ router.post('/upload', authMiddleware({
   passthrough: true,
   endpoint: 'photos'
 }),  KoaBody(), async (ctx) => {
-  
-  try {
-    const { path, name } = ctx.request.files.file
-
-    // BUG: Have to create a photos folder for it to reference
-    const savePath = Path.join(__dirname, `../../../photos/${name}`)
-    await fs.copyFileSync(path, savePath)
-    ctx.ok({ message: 'Photo succesfully saved', name})
-  } catch (err) {
-    ctx.ok({message: 'An error occured', err})
-  }
+  const { path, name, type } = ctx.request.files.file
+  const fileName = await photoService.add({ filePath: path, name, type })
+  ctx.ok({ message: 'Photo succesfully saved', fileName})
 })
 
 export default router

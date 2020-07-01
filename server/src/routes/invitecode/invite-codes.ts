@@ -21,21 +21,14 @@ const cookieConfigHttpOnly = {
 
 router.prefix('/invitecode')
 
-
 router.post('/create', authMiddleware({
   permissionGroup: 'ADMIN',
   passthrough: true,
   endpoint: 'invitecode'
 }), async (ctx) => {
   // Pre-define the invite code
-    let inviteCode: string;
-
-    // TODO: Check if parameters exist on the body
-
-    // TODO: Add verfication of types
-
-    // TODO: Never allow a user to create an invite code higher than their own permission
-    inviteCode = await inviteCodeService.create(ctx.request.body)
+  // TODO: Never allow a user to create an invite code higher than their own permission
+  const inviteCode = await inviteCodeService.create(ctx.request.body)
 
   ctx.ok({ message: 'Invite Code Created', inviteCode })
 })

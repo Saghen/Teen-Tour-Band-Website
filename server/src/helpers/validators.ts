@@ -17,6 +17,21 @@ function isValidUserEntry(firstName, lastName, username, email, phone, password,
   return true
 }
 
+function isValidPhotoBody(filePath, name, type): boolean {
+  if (typeof filePath !== 'string') return false
+  if (typeof name !== 'string') return false
+  if (typeof type !== 'string') return false
+
+  return true
+}
+
+function isValidPhotoRequestBody(name, size): boolean {
+  if (typeof name !== 'string') return false
+  if (typeof size !== 'number') return false
+
+  return true
+}
+
 // FUTURE: This is aids and needs to be fixed
 function isValidPermissionBody(isGroup, name, subTypes, methods, endpoints, permissionLevel, children ): boolean {
   if (typeof isGroup !== 'boolean') return false
@@ -66,4 +81,4 @@ function validateArrayOfObjectIds(property, data): void {
   assertObjectIdGenerator(`${property} child items'`)(data.every(isObjectId))
 }
 
-export { isValidUserEntry, isValidPermissionBody, isValidPermissionAssign, isObjectId, isPermissionGroup, isPermissionType, isPermissionLevel, validateArrayOfObjectIds, isStatus, isAlertLevel }
+export { isValidUserEntry, isValidPhotoBody, isValidPhotoRequestBody, isValidPermissionBody, isValidPermissionAssign, isObjectId, isPermissionGroup, isPermissionType, isPermissionLevel, validateArrayOfObjectIds, isStatus, isAlertLevel }
