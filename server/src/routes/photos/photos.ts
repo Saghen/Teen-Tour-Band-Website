@@ -43,11 +43,13 @@ router.post('/upload', authMiddleware({
   ctx.ok({ message: 'Photo succesfully saved', fileName})
 })
 
-router.delete('/delete', authMiddleware({
-  permissionGroup: 'ADMIN',
+router.delete('/delete/:name', authMiddleware({
+  permissionGroup: 'MEMBER',
   endpoint: 'photos'
 }), async (ctx) => {
-  ctx.ok({ message: 'Photo succesfully deleted'})
+  const { name } = ctx.params
+  const fileName = await photoService.delete({name})
+  ctx.ok({ message: 'Photo succesfully deleted', fileName})
 })
 
 export default router
