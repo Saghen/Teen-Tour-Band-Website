@@ -27,18 +27,56 @@ const cookieConfigHttpOnly = {
 
 router.prefix('/permissions')
 
-router.post('/create',  authMiddleware({
+router.post('/create', authMiddleware({
   permissionGroup: 'ADMIN',
   passthrough: true,
   endpoint: 'permissions'
 }), async (ctx) => {
   const permissionName = await permissionService.create(ctx.request.body)
-  
+
   ctx.ok({ message: 'Permission created', permissionName })
 })
 
-router.get('/get', (ctx) => { })
+router.post('/assign', authMiddleware({
+  permissionGroup: 'ADMIN',
+  passthrough: true,
+  endpoint: 'permissions'
+}), async (ctx) => {
 
-router.get('/delete', async (ctx) => { })
+  const info = await permissionService.assign(ctx.request.body)
+
+  ctx.ok({ message: 'Assigned permission to the user', info })
+})
+
+router.post('/remove', authMiddleware({
+  permissionGroup: 'ADMIN',
+  passthrough: true,
+  endpoint: 'permissions'
+}), async (ctx) => {
+
+  const user = await permissionService.remove(ctx.request.body)
+
+  ctx.ok({ message: 'Removed permissions from the user', user })
+})
+
+router.get('/get', authMiddleware({
+  permissionGroup: 'ADMIN',
+  passthrough: true,
+  endpoint: 'permissions'
+}), async (ctx) => {
+  const permission = await permissionService.get(ctx.request.body)
+
+  ctx.ok({ message: 'Got permission', permission })
+})
+
+router.get('/delete', authMiddleware({
+  permissionGroup: 'ADMIN',
+  passthrough: true,
+  endpoint: 'permissions'
+}), async (ctx) => {
+  const permission = await permissionService.delete(ctx.request.body)
+
+  ctx.ok({ message: 'Deleted permission', permission })
+})
 
 export default router

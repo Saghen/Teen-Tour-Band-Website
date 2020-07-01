@@ -41,14 +41,7 @@ export default {
     })
   },
 
-  /*
-  NOTE:
-    - Add invite code checker - done
-    - Invite code gives permissions? - yes
-    - What do permissions look like, just names? - Permission enum
-    - Give user permission based off of invite code - done
-  */
-  async signup({ firstName, lastName, username, email, phone, password, inviteCode }) {
+  async signup({ firstName, lastName, username, email, phone, password, inviteCode }): Promise<string> {
     if (!authConfig.enabled) return objectToToken({ admin: true })
 
     // Ensure we have all the parts
@@ -78,7 +71,6 @@ export default {
 
     // Get the permission that is granted
     const group = invite.permissionGroup
-
     const type = invite.permissionType
 
     // Create the user

@@ -10,9 +10,10 @@ import { PERMISSIONS } from '@constants'
 import Permission from '@models/Permissions'
 
 import { assertNotLoggedIn, assertNotValidEndpoint, assertNotAuthorized } from '@services/auth/assert'
+import { NotFound } from 'fejl'
+import { assertNotFoundGenerator } from './asserts'
 
 const secretKey = createSecretKey(Buffer.from(config.get('auth.secret')))
-
 
 /*
   Permission Overhaul
@@ -71,9 +72,15 @@ function authMiddleware(options: AuthMiddlewareOptions = { passthrough: false, p
     if (!passthrough || ctx.user) {
       const userPerm = await Permission.findOne({ name: ctx.user.permissionGroup })
       const wantedPerm = await Permission.findOne({ name: permissionGroup })
-      // TODO: Check if either permission doesn't exist
+      
+      // Check to see if the permissions exist
+      NotFound.assert(userPerm && wantedPerm, 'The permission roles are missing from the database')
 
+      // Check to make sure they are high enough
       assertNotAuthorized(userPerm.permissionLevel >= wantedPerm.permissionLevel)
+      
+      // Check to make sure that the wanted permission includes permission for the endpoint
+      assertNotAuthorized(userPerm.endpoints.includes(endpoint) || userPerm.endpoints.includes('*'))
     }
 
     return next()
@@ -92,10 +99,5 @@ function isAuthorized(permissionLevel, { user }): boolean {
   return permissionLevel >= user.permissionLevel
 }
 
-
 export { authMiddleware, objectToToken, comparePassword, isAuthorized }
-
-
-
-
 

@@ -13,19 +13,28 @@ function isValidUserEntry(firstName, lastName, username, email, phone, password,
   if (typeof phone !== 'string') return false
   if (typeof password !== 'string') return false
   if (typeof inviteCode !== 'string') return false
+
   return true
 }
 
 // FUTURE: This is aids and needs to be fixed
-function isValidPermissionBody(isGroup, name, subTypes = [], methods = [], endpoints = [], permissionLevel = [], children = []): boolean {
+function isValidPermissionBody(isGroup, name, subTypes, methods, endpoints, permissionLevel, children ): boolean {
   if (typeof isGroup !== 'boolean') return false
   if (typeof name !== 'string') return false
   if (!Array.isArray(subTypes)) return false;
   if (!Array.isArray(methods)) return false;
   if (!Array.isArray(endpoints)) return false;
-  if (typeof permissionLevel !== 'number') return false; //BUG: Reads as not a number if permissionLevel = 0
+  if (typeof permissionLevel !== 'number') return false; // BUG: Reads as not a number if permissionLevel = 0
   if (!Array.isArray(children)) return false;
 
+  return true
+}
+
+function isValidPermissionAssign(username, permissionGroup, permissionType): boolean {
+  if (typeof username !== 'string') return false
+  if (typeof permissionGroup !== 'string') return false
+  if (typeof permissionType !== 'string') return false
+  
   return true
 }
 
@@ -57,4 +66,4 @@ function validateArrayOfObjectIds(property, data): void {
   assertObjectIdGenerator(`${property} child items'`)(data.every(isObjectId))
 }
 
-export { isValidUserEntry, isValidPermissionBody, isObjectId, isPermissionGroup, isPermissionType, isPermissionLevel, validateArrayOfObjectIds, isStatus, isAlertLevel }
+export { isValidUserEntry, isValidPermissionBody, isValidPermissionAssign, isObjectId, isPermissionGroup, isPermissionType, isPermissionLevel, validateArrayOfObjectIds, isStatus, isAlertLevel }
