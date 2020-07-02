@@ -1,5 +1,6 @@
 import path from 'path'
 import Jimp from 'jimp'
+import sharp from 'sharp'
 import { NotAcceptable, BadRequest, NotFound } from 'fejl'
 import randomWords from 'random-words';
 import fs from 'fs'
@@ -44,11 +45,7 @@ export default {
     const savePath = path.join(__dirname, `../../../photos/${name}`)
 
     // Image manipulation to resize the image to 512 pixels wide and keep the aspect ratio
-    const img = await Jimp.read(filePath)
-    await img.resize(512, Jimp.AUTO)
-
-    // Write the file
-    await img.writeAsync(savePath)
+    sharp(filePath).resize(512).toFile(savePath)
 
     // Return the cool name
     return name
@@ -71,23 +68,15 @@ export default {
     // Check to see if the file exists
     NotFound.assert(fs.existsSync(orgPath), 'The file does not exist')
 
-    const read = util.promisify(fs.readFile)
-    const stream =  read(orgPath).then((res) => {
-      return Jimp.read(res)
-    }).then((img) => {
-      const i = img.resize(size, Jimp.AUTO)
-      const b = util.promisify(i.getBuffer.bind(i))
-      return b(Jimp.MIME_PNG)
-    }).then(async (buff) => {
-      const s = new Duplex()
-      s.push(buff)
-      s.push(null)
-      return s
-    }).catch((err) => {
-      BadRequest.assert(!err, 'The image converstion failed')
-    })
+    // Create a buffer of the resized image
+    const buff = await sharp(orgPath).resize(size).toBuffer()
 
-    return stream
+    // Set it to a duplex
+    const s = new Duplex()
+    s.push(buff)
+    s.push(null)
+
+    return s
   },
   async delete({ name }): Promise<string> {
     // Check for all parts of the request
